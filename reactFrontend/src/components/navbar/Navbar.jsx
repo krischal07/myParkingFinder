@@ -3,10 +3,22 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { isSignedIn } = useUser();
+
+  useEffect(() => {
+    console.log("issignedin", isSignedIn);
+    if (isSignedIn) {
+      navigate("/dashboard"); // Redirects to /dashboard if signed in
+    }
+  }, [isSignedIn, navigate]);
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -84,15 +96,17 @@ const Navbar = () => {
         </button>
         <div>
           <SignedOut>
+            {/* Sign-In Button inside SignedOut wrapper */}
             <button className="btn btn-primary">
-              <SignInButton mode="modal" asChikd>
-                Sign In
+              <SignInButton mode="modal" asChild>
+                <span>Sign In</span>
               </SignInButton>
             </button>
           </SignedOut>
         </div>
         <div>
           <SignedIn>
+            {/* Show User Button for Signed-In users */}
             <UserButton />
           </SignedIn>
         </div>
