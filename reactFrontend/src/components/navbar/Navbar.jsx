@@ -5,34 +5,17 @@ import {
   UserButton,
   useUser,
 } from "@clerk/clerk-react";
-import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const { user } = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const { user, isSignedIn } = useUser();
-  console.log("locationpathname", location.pathname);
 
   const admin = import.meta.env.VITE_ADMIN_ROLE;
-  //   console.log("admin", admin);
-  //   useEffect(() => {
-  //     if (isSignedIn && window.location.pathname !== "/dashboard") {
-  //       //   setTimeout(() => {
-  //       //     navigate("/dashboard", { replace: true });
-  //       //   }, 5000);
-  //       navigate("/dashboard");
-  //     }
-  //   }, [isSignedIn, navigate]);
-  if (isSignedIn && location.pathname !== "/dashboard") {
-    navigate("/dashboard", { replace: true });
-  }
-
   const adminClick = () => {
     navigate("/admin");
   };
-
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -70,7 +53,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-xl">MyParkingFinder</a>
+        <a href="/dashboard" className="btn btn-ghost normal-case text-xl">
+          MyParkingFinder
+        </a>
       </div>
       <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
@@ -110,7 +95,6 @@ const Navbar = () => {
         </button>
         <div>
           <SignedOut>
-            {/* Sign-In Button inside SignedOut wrapper */}
             <button className="btn btn-primary">
               <SignInButton mode="modal" asChild>
                 <span>Sign In</span>
@@ -129,7 +113,6 @@ const Navbar = () => {
         )}
         <div>
           <SignedIn>
-            {/* Show User Button for Signed-In users */}
             <UserButton />
           </SignedIn>
         </div>

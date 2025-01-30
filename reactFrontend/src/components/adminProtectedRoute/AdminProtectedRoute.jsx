@@ -5,7 +5,7 @@ const AdminProtectedRoute = ({ children }) => {
   const { user } = useUser();
   const admin = import.meta.env.VITE_ADMIN_ROLE;
   console.log("admin", admin);
-  return user?.firstName === admin ? children : <Navigate to="/signin" />;
+  return user?.firstName === admin ? children : <Navigate to="/" />;
 };
 
 export default AdminProtectedRoute;
