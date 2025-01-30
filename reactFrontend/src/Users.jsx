@@ -11,10 +11,13 @@ const Users = () => {
   console.log(users);
   return (
     <div>
-      <h1>Users</h1>
+      <h1 className="bg-red-500">Users</h1>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+          <div>
+            <li key={user.id}>{user.name}</li>
+            {/* <li key={user.id}>{user.email}</li> */}
+          </div>
         ))}
       </ul>
     </div>
