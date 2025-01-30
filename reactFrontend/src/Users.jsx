@@ -20,6 +20,7 @@ const Users = () => {
           </div>
         ))}
       </ul>
+      <button className="btn btn-primary">Click</button>
     </div>
   );
 };
