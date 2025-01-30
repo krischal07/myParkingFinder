@@ -6,18 +6,32 @@ import {
   useUser,
 } from "@clerk/clerk-react";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { isSignedIn } = useUser();
+  const location = useLocation();
 
-  useEffect(() => {
-    console.log("issignedin", isSignedIn);
-    if (isSignedIn) {
-      navigate("/dashboard"); // Redirects to /dashboard if signed in
-    }
-  }, [isSignedIn, navigate]);
+  const { user, isSignedIn } = useUser();
+  console.log("locationpathname", location.pathname);
+
+  const admin = import.meta.env.VITE_ADMIN_ROLE;
+  //   console.log("admin", admin);
+  //   useEffect(() => {
+  //     if (isSignedIn && window.location.pathname !== "/dashboard") {
+  //       //   setTimeout(() => {
+  //       //     navigate("/dashboard", { replace: true });
+  //       //   }, 5000);
+  //       navigate("/dashboard");
+  //     }
+  //   }, [isSignedIn, navigate]);
+  if (isSignedIn && location.pathname !== "/dashboard") {
+    navigate("/dashboard", { replace: true });
+  }
+
+  const adminClick = () => {
+    navigate("/admin");
+  };
 
   return (
     <div className="navbar bg-base-100">
@@ -104,6 +118,15 @@ const Navbar = () => {
             </button>
           </SignedOut>
         </div>
+        {user?.firstName === admin ? (
+          <div>
+            <button onClick={adminClick} className="btn btn-success mx-2">
+              Admin
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
         <div>
           <SignedIn>
             {/* Show User Button for Signed-In users */}
