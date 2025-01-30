@@ -1,6 +1,6 @@
 import React from "react";
-import Users from "./Users";
 import Home from "./pages/home/Home";
+import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 const App = () => {
