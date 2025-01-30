@@ -8,18 +8,7 @@ import {
 } from "@clerk/clerk-react";
 
 const Home = () => {
-  return (
-    <Layout>
-      <div>
-        <SignedOut>
-          <SignInButton mode="modal" />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </div>
-    </Layout>
-  );
+  return <Layout></Layout>;
 };
 
 export default Home;

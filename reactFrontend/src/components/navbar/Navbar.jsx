@@ -1,3 +1,9 @@
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import React from "react";
 
 const Navbar = () => {
@@ -76,6 +82,20 @@ const Navbar = () => {
             <span className="badge badge-xs badge-primary indicator-item"></span>
           </div>
         </button>
+        <div>
+          <SignedOut>
+            <button className="btn btn-primary">
+              <SignInButton mode="modal" asChikd>
+                Sign In
+              </SignInButton>
+            </button>
+          </SignedOut>
+        </div>
+        <div>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
     </div>
   );
