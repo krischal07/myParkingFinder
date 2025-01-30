@@ -5,20 +5,17 @@ import {
   UserButton,
   useUser,
 } from "@clerk/clerk-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const { user } = useUser();
   const navigate = useNavigate();
-  const { isSignedIn } = useUser();
 
-  useEffect(() => {
-    console.log("issignedin", isSignedIn);
-    if (isSignedIn) {
-      navigate("/dashboard"); // Redirects to /dashboard if signed in
-    }
-  }, [isSignedIn, navigate]);
-
+  const admin = import.meta.env.VITE_ADMIN_ROLE;
+  const adminClick = () => {
+    navigate("/admin");
+  };
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -56,7 +53,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-xl">MyParkingFinder</a>
+        <a href="/dashboard" className="btn btn-ghost normal-case text-xl">
+          MyParkingFinder
+        </a>
       </div>
       <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
@@ -96,7 +95,6 @@ const Navbar = () => {
         </button>
         <div>
           <SignedOut>
-            {/* Sign-In Button inside SignedOut wrapper */}
             <button className="btn btn-primary">
               <SignInButton mode="modal" asChild>
                 <span>Sign In</span>
@@ -104,9 +102,17 @@ const Navbar = () => {
             </button>
           </SignedOut>
         </div>
+        {user?.firstName === admin ? (
+          <div>
+            <button onClick={adminClick} className="btn btn-success mx-2">
+              Admin
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
         <div>
           <SignedIn>
-            {/* Show User Button for Signed-In users */}
             <UserButton />
           </SignedIn>
         </div>
