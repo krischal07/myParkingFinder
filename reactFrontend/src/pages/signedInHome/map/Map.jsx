@@ -52,6 +52,27 @@ const Map = () => {
   const [locationError, setLocationError] = useState(null);
   const provider = new OpenStreetMapProvider();
 
+  // Example parking spaces data
+  const parkingSpaces = [
+    {
+      id: 1,
+      name: "City Center Parking",
+      description: "Capacity: 100 cars, Price: $5/hour",
+      position: [27.7172, 85.324], // Latitude and Longitude
+    },
+    {
+      id: 2,
+      name: "Mall Parking",
+      description: "Capacity: 50 cars, Price: $3/hour",
+      position: [27.7105, 85.3256],
+    },
+  ];
+  const parkingIcon = new L.Icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png", // URL to a parking icon
+    iconSize: [32, 32], // Size of the icon
+    iconAnchor: [16, 32], // Anchor point of the icon
+  });
+
   useEffect(() => {
     // Get user's current location
     if (navigator.geolocation) {
@@ -140,6 +161,21 @@ const Map = () => {
             <Popup>You are here</Popup>
           </Marker>
         )}
+
+        {/* Markers for parking spaces */}
+        {parkingSpaces.map((parking) => (
+          <Marker
+            key={parking.id}
+            position={parking.position}
+            icon={parkingIcon}
+          >
+            <Popup>
+              <strong>{parking.name}</strong>
+              <br />
+              {parking.description}
+            </Popup>
+          </Marker>
+        ))}
 
         {/* Zoom to user's current location */}
         {userPosition && <ZoomToLocation userPosition={userPosition} />}
