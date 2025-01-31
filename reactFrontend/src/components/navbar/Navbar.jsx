@@ -53,7 +53,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center">
-        <a href="/dashboard" className="btn btn-ghost normal-case text-xl">
+        <a href="/" className="btn btn-ghost normal-case text-xl">
           MyParkingFinder
         </a>
       </div>
