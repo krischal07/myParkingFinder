@@ -1,11 +1,228 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect, useRef } from "react";
+// import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+// import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch";
+// import L from "leaflet";
+// import "leaflet/dist/leaflet.css";
+// import "leaflet-geosearch/dist/geosearch.css";
+// import polyline from "@mapbox/polyline";
+// import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+
+// // Fix Leaflet marker icons
+// delete L.Icon.Default.prototype._getIconUrl;
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl:
+//     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+//   iconUrl:
+//     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+//   shadowUrl:
+//     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+// });
+
+// // Custom parking icon
+// const parkingIcon = new L.Icon({
+//   iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+//   iconSize: [32, 32],
+// });
+
+// // Nepal's geographical boundaries
+// const NEPAL_BOUNDS = L.latLngBounds(
+//   L.latLng(26.3479, 80.0582), // Southwest coordinates
+//   L.latLng(30.4469, 88.2015) // Northeast coordinates
+// );
+
+// const NEPAL_CENTER = [28.3949, 84.124];
+
+// // Example parking spaces data
+// const parkingSpaces = [
+//   { id: 1, name: "City Center Parking", position: [27.7172, 85.324] },
+//   { id: 2, name: "Mall Parking", position: [27.7105, 85.3256] },
+// ];
+
+// // Search Control Component
+// const SearchControl = ({ provider }) => {
+//   const map = useMap();
+
+//   useEffect(() => {
+//     const searchControl = new GeoSearchControl({
+//       provider,
+//       style: "bar",
+//       autoComplete: true,
+//       autoCompleteDelay: 250,
+//       showMarker: false, // Disable the blue marker
+//       retainZoomLevel: false,
+//       animateZoom: true,
+//       keepResult: true,
+//       searchLabel: "Search for a location in Nepal",
+//       position: "topright",
+//     });
+
+//     map.addControl(searchControl);
+//     return () => map.removeControl(searchControl);
+//   }, [map, provider]);
+
+//   return null;
+// };
+
+// // Routing Component
+// const Routing = ({ start, end }) => {
+//   const map = useMap();
+//   const polylineRef = useRef();
+
+//   useEffect(() => {
+//     if (!start || !end) return;
+
+//     // Clear existing polyline
+//     if (polylineRef.current) {
+//       polylineRef.current.remove();
+//     }
+
+//     // Fetch route from OSRM API
+//     fetch(
+//       `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full`
+//     )
+//       .then((res) => res.json())
+//       .then((data) => {
+//         if (data.routes && data.routes[0]) {
+//           const decodedPath = polyline.decode(data.routes[0].geometry);
+//           const latLngPath = decodedPath.map((point) => [point[0], point[1]]);
+
+//           // Draw the route
+//           polylineRef.current = L.polyline(latLngPath, {
+//             color: "blue",
+//             weight: 4,
+//           }).addTo(map);
+
+//           // Zoom to the route bounds
+//           const bounds = L.latLngBounds(latLngPath);
+//           map.flyToBounds(bounds, { padding: [50, 50] });
+//         }
+//       })
+//       .catch((err) => console.error("Routing error:", err));
+
+//     return () => {
+//       if (polylineRef.current) {
+//         polylineRef.current.remove();
+//       }
+//     };
+//   }, [start, end, map]);
+
+//   return null;
+// };
+
+// // Zoom to User's Location Component
+// const ZoomToLocation = ({ userPosition }) => {
+//   const map = useMap();
+
+//   useEffect(() => {
+//     if (userPosition) {
+//       map.flyTo(userPosition, 15); // Zoom to level 15
+//     }
+//   }, [userPosition, map]);
+
+//   return null;
+// };
+
+// const Map = () => {
+//   const [userPosition, setUserPosition] = useState(null);
+//   const [selectedParking, setSelectedParking] = useState(null);
+//   const [locationError, setLocationError] = useState(null);
+//   const provider = new OpenStreetMapProvider();
+
+//   useEffect(() => {
+//     if (navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//         (position) => {
+//           const { latitude, longitude } = position.coords;
+//           const userLocation = L.latLng(latitude, longitude);
+//           if (NEPAL_BOUNDS.contains(userLocation)) {
+//             setUserPosition([latitude, longitude]);
+//           }
+//         },
+//         (error) => {
+//           console.error("Geolocation error:", error);
+//           setLocationError("Unable to retrieve your location.");
+//         }
+//       );
+//     }
+//   }, []);
+
+//   return (
+//     <div className="border-2 border-black-500 h-96 m-5 rounded-lg">
+//       <MapContainer
+//         center={NEPAL_CENTER}
+//         zoom={7}
+//         style={{ height: "100%", width: "100%" }}
+//         minZoom={7}
+//         maxBounds={NEPAL_BOUNDS}
+//         maxBoundsViscosity={1.0}
+//       >
+//         <TileLayer
+//           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//         />
+
+//         {/* Add Search Control */}
+//         <SearchControl provider={provider} />
+
+//         {/* User's current location */}
+//         {userPosition && (
+//           <Marker position={userPosition}>
+//             <Popup>Your Location</Popup>
+//           </Marker>
+//         )}
+
+//         {/* Zoom to user's current location */}
+//         {userPosition && <ZoomToLocation userPosition={userPosition} />}
+
+//         {/* Parking spaces */}
+//         {parkingSpaces.map((parking) => (
+//           <Marker
+//             key={parking.id}
+//             position={parking.position}
+//             icon={parkingIcon}
+//             eventHandlers={{
+//               click: () => setSelectedParking(parking.position),
+//             }}
+//           >
+//             <Popup>
+//               <strong>{parking.name}</strong>
+//               <button
+//                 onClick={() => setSelectedParking(parking.position)}
+//                 className="bg-blue-500 text-white px-2 py-1 mt-2 rounded"
+//               >
+//                 Show Route
+//               </button>
+//             </Popup>
+//           </Marker>
+//         ))}
+
+//         {/* Show route if parking is selected */}
+//         {userPosition && selectedParking && (
+//           <Routing start={userPosition} end={selectedParking} />
+//         )}
+//       </MapContainer>
+
+//       {/* Error message */}
+//       {locationError && (
+//         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white p-2 rounded">
+//           {locationError}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Map;
+
+import { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-geosearch/dist/geosearch.css";
+import polyline from "@mapbox/polyline";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-// Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -16,131 +233,118 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// Nepal's geographical boundaries
-const NEPAL_BOUNDS = L.latLngBounds(
-  L.latLng(26.3479, 80.0582), // Southwest coordinates
-  L.latLng(30.4469, 88.2015) // Northeast coordinates
-);
+const parkingIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+  iconSize: [32, 32],
+});
 
-// Center of Nepal
+const NEPAL_BOUNDS = L.latLngBounds(
+  L.latLng(26.3479, 80.0582),
+  L.latLng(30.4469, 88.2015)
+);
 const NEPAL_CENTER = [28.3949, 84.124];
+
+const parkingSpaces = [
+  { id: 1, name: "City Center Parking", position: [27.7172, 85.324] },
+  { id: 2, name: "Mall Parking", position: [27.7105, 85.3256] },
+];
 
 const SearchControl = ({ provider }) => {
   const map = useMap();
-
   useEffect(() => {
     const searchControl = new GeoSearchControl({
       provider,
       style: "bar",
       autoComplete: true,
       autoCompleteDelay: 250,
-      showMarker: true,
+      showMarker: false,
       retainZoomLevel: false,
       animateZoom: true,
       keepResult: true,
+      searchLabel: "Search for a location in Nepal",
+      position: "topright",
     });
-
     map.addControl(searchControl);
     return () => map.removeControl(searchControl);
   }, [map, provider]);
+  return null;
+};
 
+const Routing = ({ start, end }) => {
+  const map = useMap();
+  const polylineRef = useRef();
+
+  useEffect(() => {
+    if (!start || !end) return;
+
+    if (polylineRef.current) {
+      polylineRef.current.remove();
+    }
+
+    fetch(
+      `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.routes && data.routes[0]) {
+          const decodedPath = polyline.decode(data.routes[0].geometry);
+          const latLngPath = decodedPath.map((point) => [point[0], point[1]]);
+          polylineRef.current = L.polyline(latLngPath, {
+            color: "blue",
+            weight: 4,
+          }).addTo(map);
+          map.flyToBounds(L.latLngBounds(latLngPath), { padding: [50, 50] });
+        }
+      })
+      .catch((err) => console.error("Routing error:", err));
+
+    return () => {
+      if (polylineRef.current) {
+        polylineRef.current.remove();
+      }
+    };
+  }, [start, end, map]);
+
+  return null;
+};
+
+const ZoomToLocation = ({ userPosition }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (userPosition) {
+      map.flyTo(userPosition, 15);
+    }
+  }, [userPosition, map]);
   return null;
 };
 
 const Map = () => {
   const [userPosition, setUserPosition] = useState(null);
+  const [selectedParking, setSelectedParking] = useState(null);
+  const [showRoute, setShowRoute] = useState(false);
   const [locationError, setLocationError] = useState(null);
   const provider = new OpenStreetMapProvider();
-
-  // Example parking spaces data
-  const parkingSpaces = [
-    {
-      id: 1,
-      name: "City Center Parking",
-      description: "Capacity: 100 cars, Price: $5/hour",
-      position: [27.7172, 85.324], // Latitude and Longitude
-    },
-    {
-      id: 2,
-      name: "Mall Parking",
-      description: "Capacity: 50 cars, Price: $3/hour",
-      position: [27.7105, 85.3256],
-    },
-  ];
-  const parkingIcon = new L.Icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png", // URL to a parking icon
-    iconSize: [32, 32], // Size of the icon
-    iconAnchor: [16, 32], // Anchor point of the icon
-  });
-
+  console.log("showRoute", showRoute);
   useEffect(() => {
-    // Get user's current location
     if (navigator.geolocation) {
-      console.log("Geolocation is supported by the browser.");
-
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("Location retrieved successfully:", position);
           const { latitude, longitude } = position.coords;
           const userLocation = L.latLng(latitude, longitude);
-
-          // Check if the user is within Nepal's bounds
           if (NEPAL_BOUNDS.contains(userLocation)) {
-            console.log("User is within Nepal:", userLocation);
-            setUserPosition(userLocation);
-          } else {
-            console.log("User is outside Nepal:", userLocation);
-            setLocationError("You are not in Nepal.");
+            setUserPosition([latitude, longitude]);
           }
         },
         (error) => {
-          console.error("Error getting location:", error);
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              setLocationError(
-                "Permission denied. Please enable location access."
-              );
-              break;
-            case error.POSITION_UNAVAILABLE:
-              setLocationError("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              setLocationError("The request to get location timed out.");
-              break;
-            default:
-              setLocationError("Unable to retrieve your location.");
-          }
-        },
-        {
-          enableHighAccuracy: true, // Use high-accuracy mode
-          timeout: 10000, // 10 seconds timeout
-          maximumAge: 0, // Do not use a cached position
+          console.error("Geolocation error:", error);
+          setLocationError("Unable to retrieve your location.");
         }
       );
-    } else {
-      console.log("Geolocation is not supported by the browser.");
-      setLocationError("Geolocation is not supported by your browser.");
     }
   }, []);
 
-  // Zoom to user's current location
-  const ZoomToLocation = ({ userPosition }) => {
-    const map = useMap();
-
-    useEffect(() => {
-      if (userPosition) {
-        map.flyTo(userPosition, 15); // Zoom to level 15 (you can adjust this)
-      }
-    }, [userPosition, map]);
-
-    return null;
-  };
-
   return (
-    <div
-      className="border-2 border-black-500 h-96 m-5 rounded-lg"
-      //   style={{ height: "80vh", width: "100%" }}
-    >
+    <div className="border-2 border-black-500 h-96 m-5 rounded-lg">
       <MapContainer
         center={NEPAL_CENTER}
         zoom={7}
@@ -153,49 +357,59 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         <SearchControl provider={provider} />
 
-        {/* Marker for user's current location */}
         {userPosition && (
           <Marker position={userPosition}>
-            <Popup>You are here</Popup>
+            <Popup>Your Location</Popup>
           </Marker>
         )}
 
-        {/* Markers for parking spaces */}
+        {userPosition && <ZoomToLocation userPosition={userPosition} />}
+
         {parkingSpaces.map((parking) => (
           <Marker
             key={parking.id}
             position={parking.position}
             icon={parkingIcon}
+            eventHandlers={{
+              click: () => setSelectedParking(parking.position),
+            }}
           >
             <Popup>
               <strong>{parking.name}</strong>
-              <br />
-              {parking.description}
+              <div className="border-2 border-red-400">
+                <button
+                  onClick={() => {
+                    setSelectedParking(parking.position);
+                    setShowRoute(true);
+                  }}
+                  className="bg-blue-500 text-white px-2 py-1 mt-2 rounded"
+                >
+                  Show Route
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedParking(null);
+                    setShowRoute(false);
+                  }}
+                  className="bg-red-500 text-white px-2 py-1 mt-2 rounded"
+                >
+                  Cancel Route
+                </button>
+              </div>
             </Popup>
           </Marker>
         ))}
 
-        {/* Zoom to user's current location */}
-        {userPosition && <ZoomToLocation userPosition={userPosition} />}
+        {userPosition && selectedParking && showRoute && (
+          <Routing start={userPosition} end={selectedParking} />
+        )}
       </MapContainer>
 
-      {/* Display location error */}
       {locationError && (
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            padding: "10px",
-            backgroundColor: "red",
-            color: "white",
-            borderRadius: "5px",
-            zIndex: 1000,
-          }}
-        >
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white p-2 rounded">
           {locationError}
         </div>
       )}
