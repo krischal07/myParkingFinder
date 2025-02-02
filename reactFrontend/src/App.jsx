@@ -2,7 +2,7 @@ import React from "react";
 import Home from "./pages/home/Home";
 import "./App.css";
 // import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+// HEllo this is editeing 
 // const App = () => {
 //   return (
 //     <Router>
