@@ -33,7 +33,7 @@ class ParkingSpotController extends Controller
                 'name' => $spot->name,
                 'location' => $spot->location,
                 'price' => $spot->price,
-
+                'spots' => $spot->spots,
                 'position' => [$spot->latitude, $spot->longitude],
             ];
         });

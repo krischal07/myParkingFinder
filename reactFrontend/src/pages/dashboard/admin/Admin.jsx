@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 const Admin = () => {
   console.log("we in admin now");
-  const [places, setPlaces] = useState([]);
+  const [parkingSpots, setParkingSpots] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/users")
+    fetch("http://127.0.0.1:8000/api/parking_spots")
       .then((res) => res.json())
-      .then((data) => setPlaces(data));
+      .then((data) => setParkingSpots(data));
   }, []);
-  console.log(places);
+  // console.log(places);
 
   return (
     <div>
@@ -20,7 +20,7 @@ const Admin = () => {
         <Link to="/addspot">
           <button className="btn btn-primary">Add Spot</button>
         </Link>
-        <Table places={places} />
+        <Table parkingSpots={parkingSpots} />
       </Layout>
     </div>
   );

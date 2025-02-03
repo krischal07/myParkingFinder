@@ -8,6 +8,7 @@ import {
   useMap,
 } from "react-leaflet";
 import axios from "axios";
+import Layout from "../../../../components/layout/Layout";
 const Addspot = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -109,78 +110,173 @@ const Addspot = () => {
   };
 
   return (
-    <div>
-      <h1>Add Parking Spot</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="spots"
-          placeholder="Spots"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="string"
-          name="location"
-          placeholder="Location"
-          onChange={handleChange}
-          required
-        />
+    <Layout>
+      <h1 className="border-2 border-black flex justify-center text-7xl">
+        Add Parking Spot
+      </h1>
 
-        {/* Read-only latitude and longitude inputs */}
-        <input
-          type="text"
-          name="latitude"
-          value={formData.latitude}
-          readOnly
-          placeholder="Latitude"
-        />
-        <input
-          type="text"
-          name="longitude"
-          value={formData.longitude}
-          readOnly
-          placeholder="Longitude"
-        />
+      {/* larger Screen */}
+      <div className=" justify-evenly hidden lg:flex">
+        <div>
+          <form
+            onSubmit={handleSubmit}
+            className="border-4 border-green-600 flex flex-col"
+          >
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="spots"
+              placeholder="Spots"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="string"
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+              required
+            />
 
-        <button type="submit">Add Parking Spot</button>
-      </form>
+            {/* Read-only latitude and longitude inputs */}
+            <input
+              type="text"
+              name="latitude"
+              value={formData.latitude}
+              readOnly
+              placeholder="Latitude"
+            />
+            <input
+              type="text"
+              name="longitude"
+              value={formData.longitude}
+              readOnly
+              placeholder="Longitude"
+            />
 
-      {/* Leaflet Map */}
-      <MapContainer
-        center={[27.7172, 85.324]}
-        zoom={13}
-        style={{ height: "400px", width: "100%" }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {currentLocation && (
-          <>
-            <ZoomToLocation currentLocation={currentLocation} />
-            <Marker
-              position={[currentLocation.lat, currentLocation.lng]}
-              icon={blueIcon}
-            >
-              <Popup>Your current location</Popup>
-            </Marker>
-          </>
-        )}
-        <LocationPicker />
-      </MapContainer>
-    </div>
+            <button type="submit">Add Parking Spot</button>
+          </form>
+        </div>
+
+        {/* Leaflet Map */}
+        <div className="border-2 border-red-500 w-96">
+          <MapContainer
+            center={[27.7172, 85.324]}
+            zoom={13}
+            style={{ height: "400px", width: "100%" }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {currentLocation && (
+              <>
+                <ZoomToLocation currentLocation={currentLocation} />
+                <Marker
+                  position={[currentLocation.lat, currentLocation.lng]}
+                  icon={blueIcon}
+                >
+                  <Popup>Your current location</Popup>
+                </Marker>
+              </>
+            )}
+            <LocationPicker />
+          </MapContainer>
+        </div>
+      </div>
+
+      {/* smaller screen */}
+      <div className=" justify-evenly flex flex-col lg:hidden">
+        <div>
+          <form
+            onSubmit={handleSubmit}
+            className="border-4 border-green-600 flex flex-col"
+          >
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="spots"
+              placeholder="Spots"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="string"
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+              required
+            />
+
+            {/* Read-only latitude and longitude inputs */}
+            <input
+              type="text"
+              name="latitude"
+              value={formData.latitude}
+              readOnly
+              placeholder="Latitude"
+            />
+            <input
+              type="text"
+              name="longitude"
+              value={formData.longitude}
+              readOnly
+              placeholder="Longitude"
+            />
+
+            <button type="submit">Add Parking Spot</button>
+          </form>
+        </div>
+
+        {/* Leaflet Map */}
+        <div className="border-2 border-red-500 w-96">
+          <MapContainer
+            center={[27.7172, 85.324]}
+            zoom={13}
+            style={{ height: "400px", width: "100%" }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {currentLocation && (
+              <>
+                <ZoomToLocation currentLocation={currentLocation} />
+                <Marker
+                  position={[currentLocation.lat, currentLocation.lng]}
+                  icon={blueIcon}
+                >
+                  <Popup>Your current location</Popup>
+                </Marker>
+              </>
+            )}
+            <LocationPicker />
+          </MapContainer>
+        </div>
+      </div>
+    </Layout>
   );
 };
 
