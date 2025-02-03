@@ -1,7 +1,7 @@
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-const Table = ({ places }) => {
-  console.log("table plaves:", places);
+const Table = ({ parkingSpots }) => {
+  console.log("table plaves:", parkingSpots);
   return (
     <div className="overflow-x-auto">
       <table className="table">
@@ -10,20 +10,20 @@ const Table = ({ places }) => {
           <tr>
             <th></th>
             <th>Name</th>
-            <th>Date</th>
-            <th>email</th>
-            <th>Action</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Spots</th>
           </tr>
         </thead>
-        {places.map((place, index) => {
+        {parkingSpots.map((spot, index) => {
           return (
             <tbody>
-              {/* row 1 */}
               <tr>
                 <th>{index + 1}</th>
-                <td>{place.name}</td>
-                <td>{place.email_verified_at}</td>
-                <td>{place.email}</td>
+                <td>{spot.name}</td>
+                <td>{spot.location}</td>
+                <td>{spot.price}</td>
+                <td>{spot.spots}</td>
                 <td>
                   <button className="btn btn-primary mx-1">
                     <FaEdit />
