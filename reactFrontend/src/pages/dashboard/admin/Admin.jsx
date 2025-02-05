@@ -20,7 +20,7 @@ const Admin = () => {
         <Link to="/addspot">
           <button className="btn btn-primary">Add Spot</button>
         </Link>
-        <Table parkingSpots={parkingSpots} />
+        <Table parkingSpots={parkingSpots} setParkingSpots={setParkingSpots} />
       </Layout>
     </div>
   );

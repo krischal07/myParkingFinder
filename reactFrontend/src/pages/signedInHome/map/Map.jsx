@@ -94,7 +94,7 @@ const SearchControl = ({ provider }) => {
       retainZoomLevel: false,
       animateZoom: true,
       keepResult: true,
-      searchLabel: "Search for a location in Nepal",
+      searchLabel: "Search for Parking Space",
       position: "topright",
     });
 
@@ -106,16 +106,17 @@ const SearchControl = ({ provider }) => {
 };
 
 // Routing Component
-const Routing = ({ start, end }) => {
+const Routing = ({ start, end, polylineRef }) => {
   const map = useMap();
-  const polylineRef = useRef(null);
 
   useEffect(() => {
     if (!start || !end) return;
 
     // Clear existing polyline
     if (polylineRef.current) {
-      polylineRef.current.remove();
+      // polylineRef.current.remove();
+      map.removeLayer(polylineRef.current); // Remove from map
+      polylineRef.current = null;
       console.log("Existing polyline removed");
     }
 
@@ -144,14 +145,16 @@ const Routing = ({ start, end }) => {
     // Cleanup function
     return () => {
       if (polylineRef.current) {
-        polylineRef.current.remove(); // Remove the polyline when the component unmounts
+        map.removeLayer(polylineRef.current); // Remove from map
+
+        // polylineRef.current.remove(); // Remove the polyline when the component unmounts
         polylineRef.current = null;
         console.log("Polyline removed on cleanup");
       }
     };
   }, [start, end, map]);
 
-  return null;
+  // return null;
 };
 
 // Zoom to User's Location Component
@@ -174,6 +177,8 @@ const Map = () => {
   const [locationError, setLocationError] = useState(null);
   const [parkingSpace, setParkingSpace] = useState([]);
   const provider = new OpenStreetMapProvider();
+  const polylineRef = useRef(null);
+  // const [searchLocation, setSearchLocation] = useState("");
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -207,8 +212,13 @@ const Map = () => {
   }, []);
 
   const handleCancelBtn = () => {
-    setShowRoute(false);
-    setSelectedParking(null);
+    if (polylineRef.current) {
+      polylineRef.current.remove();
+      polylineRef.current = null;
+    }
+    // setShowRoute(false);
+    // setSelectedParking(null);
+    console.log("button cancel");
   };
 
   // Get nearest parking spaces
@@ -221,7 +231,7 @@ const Map = () => {
     : [];
 
   return (
-    <div className="border-2 border-black-500 h-96 m-5 rounded-lg">
+    <div className="border-2 border-red-500 h-96 m-5 rounded-lg ">
       <MapContainer
         center={NEPAL_CENTER}
         zoom={7}
@@ -279,7 +289,11 @@ const Map = () => {
         ))}
 
         {userPosition && selectedParking && showRoute && (
-          <Routing start={userPosition} end={selectedParking} />
+          <Routing
+            start={userPosition}
+            end={selectedParking}
+            polylineRef={polylineRef}
+          />
         )}
       </MapContainer>
 
@@ -292,51 +306,40 @@ const Map = () => {
       {/* Table for nearest parking spaces */}
       <div className="mt-4 p-4">
         <h2 className="text-xl font-bold mb-4">Nearest Parking Spaces</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">Name</th>
-              <th className="py-2 px-4 border-b">Distance (km)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {nearestParkingSpaces.map((parking) => (
-              <tr key={parking.id}>
-                <div className="collapse collapse-arrow bg-base-200 my-4">
-                  <input type="radio" name="my-accordion-1" defaultChecked />
-                  <div className="collapse-title text-xl font-medium">
-                    {parking.name}
-                  </div>
-                  <div className="collapse-content">
-                    <p>hello</p>
-                    <div>
-                      <button
-                        onClick={() => {
-                          setSelectedParking(parking.position);
-                          setShowRoute(true);
-                        }}
-                        className="bg-blue-500 text-white px-2 py-1 mt-2 rounded"
-                      >
-                        Show Route
-                      </button>
-                      <button
-                        onClick={handleCancelBtn}
-                        className="bg-red-500 text-white px-2 py-1 mt-2 rounded"
-                      >
-                        Cancel Route
-                      </button>
-                    </div>
-                  </div>
+        {nearestParkingSpaces.map((parking) => (
+          <div key={parking.id}>
+            <div className="collapse collapse-arrow bg-base-200 my-4">
+              <input type="radio" name="my-accordion-1" defaultChecked />
+              <div className="flex justify-between collapse-title text-xl font-medium">
+                <div>{parking.name}</div>
+                <div className="py-2 px-4 border-b">
+                  {parking.distance.toFixed(2)}km
                 </div>
-                {/* <td className="py-2 px-4 border-b">{parking.name}</td> */}
-                {/* <td className="py-2 px-4 border-b">{parking.price}</td> */}
-                <td className="py-2 px-4 border-b">
-                  {parking.distance.toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </div>
+              <div className="collapse-content">
+                <p>hello</p>
+
+                <div>
+                  <button
+                    onClick={() => {
+                      setSelectedParking(parking.position);
+                      setShowRoute(true);
+                    }}
+                    className="bg-blue-500 text-white px-2 py-1 mt-2 rounded"
+                  >
+                    Show Route
+                  </button>
+                  <button
+                    onClick={handleCancelBtn}
+                    className="bg-red-500 text-white px-2 py-1 mt-2 rounded"
+                  >
+                    Cancel Route
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

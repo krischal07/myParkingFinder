@@ -40,4 +40,28 @@ class ParkingSpotController extends Controller
 
         return response()->json($parkingSpots);
     }
+
+    public function destroy($id)
+    {
+        $parkingSpot_delete = ParkingSpot::find($id);
+        // echo $parkingSpot_delete;
+        if (!$parkingSpot_delete) {
+            return response()->json(['message' => 'Parking spot not found', 404]);
+        }
+
+        $parkingSpot_delete->delete();
+        return response()->json(['message' => 'Parking spot deleted successfully',]);
+    }
+
+
+    public function show_data($id)
+    {
+        $parkingSpot = ParkingSpot::find($id);
+        // echo $parkingSpot_delete;
+        if (!$parkingSpot) {
+            return response()->json(['message' => 'Parking spot not found', 404]);
+        }
+
+        return response()->json($parkingSpot);
+    }
 }
