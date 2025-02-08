@@ -17,7 +17,7 @@ const Navbar = () => {
     navigate("/admin");
   };
   return (
-    <div className="navbar bg-base-100">
+    <div className="fixed z-10 navbar bg-base-100">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
