@@ -34,22 +34,6 @@ const NEPAL_BOUNDS = L.latLngBounds(
 
 const NEPAL_CENTER = [28.3949, 84.124];
 
-// Example parking spaces data
-const parkingSpaces = [
-  {
-    id: 1,
-    name: "City Center Parking",
-    position: [27.7172, 85.324],
-    price: "$5/hour",
-  },
-  {
-    id: 2,
-    name: "Mall Parking",
-    position: [27.7105, 85.3256],
-    price: "$3/hour",
-  },
-];
-
 // Function to calculate distance between two points using Haversine formula
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // Radius of the Earth in km
@@ -208,6 +192,7 @@ const Map = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
+          console.log(data);
           setParkingSpace(data);
         }
       })
@@ -361,7 +346,7 @@ const Map = () => {
                       </div>
                       <div className="collapse-content">
                         <p>hello</p>
-
+                        <img src={parking.image} />
                         <div>
                           <button
                             onClick={() => {

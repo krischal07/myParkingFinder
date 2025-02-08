@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('price');
+            $table->integer('phone_no');
             $table->string('location');
+            $table->string('image')->nullable();
             $table->integer('spots');
             $table->decimal('latitude');
             $table->decimal('longitude');

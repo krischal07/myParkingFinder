@@ -10,7 +10,7 @@ class ParkingSpot extends Model
     //
 
     use HasFactory;
-    protected $fillable = ['name', 'location', 'price', 'spots', 'latitude', 'longitude'];
+    protected $fillable = ['name', 'location', 'price', 'spots', 'latitude', 'longitude', 'phone_no', 'image'];
     protected $appends = ['position'];
 
     public function getPositionAttribute()
