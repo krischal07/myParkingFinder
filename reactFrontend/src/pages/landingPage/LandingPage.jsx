@@ -1,26 +1,34 @@
 import React from "react";
-import { Search, MapPin, Clock, CreditCard, Phone } from "lucide-react";
+import { Search, MapPin, Clock, CreditCard, Phone, Cable } from "lucide-react";
 import landing_page from "../../assets/landingPage.png";
 import landing_page2 from "../../assets/landing_page2.png";
+import { SignInButton } from "@clerk/clerk-react";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <header className="bg-blue-600 text-white">
+      <header className="bg-white text-black">
         <div className="container mx-auto px-6 py-20">
           <div className="w-full h-72 flex justify-between">
-            <div>
+            <div className="flex flex-col items-center justify-center ">
               <h1 className="text-5xl font-bold mb-6">
-                Find the Perfect Parking Spot in Seconds
+                Find the<span className="text-blue-500">🌟Perfect</span>
+                <span className="text-green-700"> Parking🌟</span>Spot in
+                Seconds
               </h1>
-              <p className="text-xl mb-8">
+              <p className="text-xl italic mb-8">
                 {/* Discover and reserve parking spaces near you. Save time and avoid
               the hassle of searching for parking. */}
-                Parking made easy, wherever you go
+                🚗 Parking made easy, wherever you go
               </p>
+              <button className="btn btn-active btn-neutral w-42">
+                <SignInButton mode="modal" asChild>
+                  <span>Get Started</span>
+                </SignInButton>
+              </button>
             </div>
             <div>
-              <img className="w-92" src={landing_page2} />
+              <img className="w-[400px]" src={landing_page2} />
             </div>
 
             {/* <div className="flex gap-4 bg-white rounded-lg p-2 max-w-2xl">
@@ -41,7 +49,7 @@ const LandingPage = () => {
       <section className="py-20">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center mb-16">
-            Why Choose MyParkingFinder?
+            🚀 Why Choose MyParkingFinder?
           </h2>
           <div className="grid md:grid-cols-3 gap-12">
             <FeatureCard
@@ -55,9 +63,9 @@ const LandingPage = () => {
               description="Reserve your parking spot in advance and save time with our seamless booking system."
             />
             <FeatureCard
-              icon={<CreditCard size={32} />}
-              title="Secure Payment"
-              description="Pay safely and securely through our encrypted payment gateway."
+              icon={<Cable size={32} />}
+              title="User Friendly"
+              description="Enjoy a simple and intuitive interface designed for effortless navigation, ensuring a smooth and hassle-free experience for all users."
             />
           </div>
         </div>
