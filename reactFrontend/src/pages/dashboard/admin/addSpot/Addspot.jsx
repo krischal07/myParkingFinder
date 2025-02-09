@@ -16,11 +16,19 @@ const Addspot = () => {
     spots: "",
     latitude: "",
     longitude: "",
+    phone_no: "",
+    image: "",
   });
 
   // Handle text input changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    if (e.target.name === "image") {
+      setFormData({ ...formData, image: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -93,7 +101,10 @@ const Addspot = () => {
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/parking_spots",
-        formData
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
       console.log("Success:", response.data);
       alert("Parking spot added successfully!");
@@ -103,6 +114,8 @@ const Addspot = () => {
         spots: "",
         latitude: "",
         longitude: "",
+        phone_no: "",
+        image: "",
       });
     } catch (error) {
       console.error("Error adding parking spot:", error);
@@ -121,6 +134,8 @@ const Addspot = () => {
           <form
             onSubmit={handleSubmit}
             className="border-4 border-green-600 flex flex-col"
+            method="post"
+            encType="multipart/form-data"
           >
             <label>Name</label>
             <input
@@ -129,6 +144,7 @@ const Addspot = () => {
               placeholder="Name"
               onChange={handleChange}
               required
+              value={formData.name}
             />
             <input
               type="number"
@@ -150,6 +166,20 @@ const Addspot = () => {
               placeholder="Location"
               onChange={handleChange}
               required
+            />
+            <input
+              type="number"
+              name="phone_no"
+              placeholder="Phone number"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="file"
+              name="image"
+              // placeholder="Image"
+              onChange={handleChange}
+              accept="image/*"
             />
 
             {/* Read-only latitude and longitude inputs */}
