@@ -801,7 +801,7 @@ const Map = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <div className="w-2/3 p-4">
+      <div className="w-2/3 mt-4 p-6">
         <div className="h-full rounded-lg overflow-hidden shadow-lg">
           <MapContainer
             center={NEPAL_CENTER}

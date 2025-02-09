@@ -334,16 +334,16 @@ const AddSpot = () => {
     latitude: "",
     longitude: "",
     phone_no: "",
-    image: "",
+    // image: "",
     location: "",
   });
 
   const handleChange = (e) => {
-    if (e.target.name === "image") {
-      setFormData({ ...formData, image: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // if (e.target.name === "image") {
+    //   setFormData({ ...formData, image: e.target.files[0] });
+    // } else {
+    // }
   };
 
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -427,7 +427,7 @@ const AddSpot = () => {
         latitude: "",
         longitude: "",
         phone_no: "",
-        image: "",
+        // image: "",
         location: "",
       });
     } catch (error) {
@@ -544,7 +544,7 @@ const AddSpot = () => {
                     />
                   </div>
 
-                  <div className="form-control">
+                  {/* <div className="form-control">
                     <label className="label">
                       <span className="label-text flex items-center gap-2">
                         <Image className="w-4 h-4" /> Spot Image
@@ -557,7 +557,7 @@ const AddSpot = () => {
                       onChange={handleChange}
                       accept="image/*"
                     />
-                  </div>
+                  </div> */}
 
                   {/* Hidden Coordinates Fields */}
                   <div className="grid grid-cols-2 gap-4">
