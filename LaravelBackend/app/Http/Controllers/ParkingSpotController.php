@@ -10,21 +10,21 @@ class ParkingSpotController extends Controller
     //
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|string',
-        //     'location' => 'required|string',
-        //     'price' => 'required|numeric',
-        //     'spots' => 'required|numeric',
-        //     'latitude' => 'required|numeric',
-        //     'longitude' => 'required|numeric',
-        //     'phone_no' => 'required|numeric',
-        //     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        //     // 'description' => 'required|string',
-        // ]);
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('spots', 'public'); // Saves in storage/app/public/spots
-        }
+        $request->validate([
+            'name' => 'required|string',
+            'location' => 'required|string',
+            'price' => 'required|numeric',
+            'spots' => 'required|numeric',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'phone_no' => 'required|numeric',
+            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            // 'description' => 'required|string',
+        ]);
+        // $imagePath = null;
+        // if ($request->hasFile('image')) {
+        //     $imagePath = $request->file('image')->store('spots', 'public'); // Saves in storage/app/public/spots
+        // }
 
         $item = ParkingSpot::create([
             'name' => $request->input('name'),
@@ -34,7 +34,7 @@ class ParkingSpotController extends Controller
             'latitude' => $request->input('latitude'),
             'longitude' => $request->input('longitude'),
             'phone_no' => $request->input('phone_no'),
-            'image' => $imagePath,
+            // 'image' => $imagePath,
         ]);
 
 
@@ -53,7 +53,7 @@ class ParkingSpotController extends Controller
                 'spots' => $spot->spots,
                 'position' => [$spot->latitude, $spot->longitude],
                 'phone_no' => $spot->phone_no,
-                'image' =>  url('storage/' . $spot->image)
+                // 'image' =>  url('storage/' . $spot->image)
             ];
         });
 
