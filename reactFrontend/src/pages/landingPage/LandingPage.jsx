@@ -12,14 +12,16 @@ const LandingPage = () => {
           <div className="w-full h-72 flex justify-between">
             <div className="flex flex-col items-center justify-center ">
               <h1 className="text-5xl font-bold mb-6">
-                Find the<span className="text-blue-500">🌟Perfect</span>
-                <span className="text-green-700"> Parking🌟</span>Spot in
-                Seconds
+                Find the<span className="text-blue-500">🚗Perfect</span>
+                <span className="text-green-700"> Parking 🚲</span> <br />
+                <span className="flex  justify-center">
+                  <span className="">Spot in Seconds</span>
+                </span>
               </h1>
               <p className="text-xl italic mb-8">
                 {/* Discover and reserve parking spaces near you. Save time and avoid
               the hassle of searching for parking. */}
-                🚗 Parking made easy, wherever you go
+                Parking made easy, wherever you go
               </p>
               <button className="btn btn-active btn-neutral w-42">
                 <SignInButton mode="modal" asChild>
