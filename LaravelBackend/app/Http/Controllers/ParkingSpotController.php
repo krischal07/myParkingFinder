@@ -52,7 +52,7 @@ class ParkingSpotController extends Controller
                 'price' => $spot->price,
                 'spots' => $spot->spots,
                 'position' => [$spot->latitude, $spot->longitude],
-                'phone-no' => $spot->phone_no,
+                'phone_no' => $spot->phone_no,
                 'image' =>  url('storage/' . $spot->image)
             ];
         });

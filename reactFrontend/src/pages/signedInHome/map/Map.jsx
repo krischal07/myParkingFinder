@@ -8,6 +8,17 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-geosearch/dist/geosearch.css";
 import polyline from "@mapbox/polyline";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import {
+  FaCar,
+  FaMap,
+  FaMapMarked,
+  FaMapMarkedAlt,
+  FaMapMarker,
+  FaMapMarkerAlt,
+  FaMarker,
+  FaPhone,
+  FaPhoneAlt,
+} from "react-icons/fa";
 
 // Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -162,13 +173,16 @@ const ZoomToLocation = ({ userPosition }) => {
 const Map = () => {
   const [userPosition, setUserPosition] = useState(null);
   const [selectedParking, setSelectedParking] = useState(null);
+  const [accordianParking, setAccordianParking] = useState(null);
   const [showRoute, setShowRoute] = useState(false);
   const [locationError, setLocationError] = useState(null);
   const [parkingSpace, setParkingSpace] = useState([]);
   const provider = new OpenStreetMapProvider();
   const polylineRef = useRef(null);
-  // const [searchLocation, setSearchLocation] = useState("");
 
+  // const [searchLocation, setSearchLocation] = useState("");
+  console.log("selectedParking", selectedParking);
+  console.log("accordianParking", accordianParking);
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -201,6 +215,24 @@ const Map = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (userPosition) {
+      const newParkingSpace = parkingSpace.map((parking) => {
+        const distance = calculateDistance(
+          userPosition[0],
+          userPosition[1],
+          parking.position[0],
+          parking.position[1]
+        );
+        return {
+          ...parking,
+          distance: distance.toFixed(2),
+        };
+      });
+      setParkingSpace(newParkingSpace);
+    }
+  }, [userPosition]);
+
   const handleCancelBtn = () => {
     // if (polylineRef.current) {
     //   polylineRef.current.remove();
@@ -220,13 +252,15 @@ const Map = () => {
       ).slice(0, 5) // Show top 5 nearest parking spaces
     : [];
 
+  console.log("nearestParkingSpaces", nearestParkingSpaces);
+
   const [sortBy, setSortBy] = useState("distance");
   console.log(sortBy);
   return (
     <div>
       {/* Desktop Screen */}
       <div className="hidden lg:flex h-screen">
-        <div className="border-2 border-red-500 h-full w-2/3 mt-10 rounded-lg fixed ">
+        <div className=" h-full w-[1090px] mt-10 rounded-lg fixed ">
           <MapContainer
             center={NEPAL_CENTER}
             zoom={7}
@@ -256,13 +290,28 @@ const Map = () => {
                 position={parking.position}
                 icon={parkingIcon}
                 eventHandlers={{
-                  click: () => setSelectedParking(parking.position),
+                  click: () => {
+                    setSelectedParking(parking.position);
+                    if (userPosition) {
+                      const distance = calculateDistance(
+                        userPosition[0],
+                        userPosition[1],
+                        parking.position[0],
+                        parking.position[1]
+                      );
+                      setAccordianParking({
+                        ...parking,
+                        distance: distance.toFixed(2),
+                      });
+                    }
+                    // setAccordianParking(parking);
+                  },
                 }}
               >
                 <Popup>
-                  <strong>{parking.name}</strong>
-                  <p>{parking.price}</p>
-                  <div className="border-2 border-red-400">
+                  <strong className="text-3xl">{parking.name}</strong>
+                  {/* <p>{parking.price}</p> */}
+                  {/* <div className="border-2 border-red-400">
                     <button
                       onClick={() => {
                         setSelectedParking(parking.position);
@@ -272,13 +321,7 @@ const Map = () => {
                     >
                       Show Route
                     </button>
-                    <button
-                      onClick={handleCancelBtn}
-                      className="bg-red-500 text-white px-2 py-1 mt-2 rounded"
-                    >
-                      Cancel Route
-                    </button>
-                  </div>
+                  </div> */}
                 </Popup>
               </Marker>
             ))}
@@ -300,13 +343,13 @@ const Map = () => {
         </div>
 
         {/* Table for nearest parking spaces */}
-        <div className="border border-yellow-500 bg-gray-200 ml-auto w-[490px] h-screen  mt-10">
-          <div className="fixed bg-gray-100 border border-black z-10 w-[490px]">
+        <div className=" bg-gray-200 ml-auto w-[390px] h-screen  mt-10">
+          <div className="fixed bg-gray-100 z-10 w-[390px]">
             {/* <h2 className="text-xl font-bold mb-4 flex justify-center">
               Parking Spaces
             </h2> */}
             <div className="flex justify-end p-2">
-              <p className="text-xl mx-5">Sort By:</p>
+              <p className="text-xl font-semibold mx-5">Sort By:</p>
               <button
                 onClick={() => setSortBy("distance")}
                 className={`btn mx-2  ${
@@ -328,46 +371,117 @@ const Map = () => {
               </button>
             </div>
           </div>
-          <div className="border-2 border-green-500 mt-15">
+          <div className=" mt-15">
+            {accordianParking ? (
+              <div key={accordianParking.id}>
+                <div className="collapse collapse-arrow bg-base-200 my-4">
+                  <input type="radio" name="my-accordion-1" defaultChecked />
+                  <div className="flex justify-between collapse-title text-xl font-medium">
+                    <div>{accordianParking.name}</div>
+                    <div className="py-2 px-4 ">
+                      {accordianParking.distance}km
+                    </div>
+                  </div>
+                  <div className="collapse-content">
+                    <div className="flex justify-center">
+                      <p className="text-4xl text-green-700">
+                        Rs.
+                        <span className="font-bold">
+                          {accordianParking.price}
+                        </span>
+                        <span className="text-black text-2xl">/hr</span>
+                      </p>
+                    </div>
+                    <div className="flex">
+                      <FaCar />
+                      {accordianParking.spots} spots
+                    </div>
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => {
+                          setSelectedParking(accordianParking.position);
+                          setShowRoute(true);
+                        }}
+                        className="w-64 bg-blue-500 hover:bg-blue-700 cursor-pointer text-white p-2 mt-2 rounded"
+                      >
+                        Get Directions
+                      </button>
+                    </div>
+                    <img
+                      width="100px"
+                      height="200px"
+                      src={accordianParking.image}
+                    />
+                    <div className="flex">
+                      <FaMapMarkerAlt />
+                      {accordianParking.location}
+                    </div>
+                    <FaPhone />
+                    {accordianParking.phone_no}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             {sortBy === "distance"
-              ? nearestParkingSpaces.map((parking) => (
-                  <div key={parking.id}>
-                    <div className="collapse collapse-arrow bg-base-200 my-4">
-                      <input
-                        type="radio"
-                        name="my-accordion-1"
-                        defaultChecked
-                      />
-                      <div className="flex justify-between collapse-title text-xl font-medium">
-                        <div>{parking.name}</div>
-                        <div className="py-2 px-4 border-b">
-                          {parking.distance.toFixed(2)}km
+              ? nearestParkingSpaces.map((parking) => {
+                  console.log("parkong distance", parking);
+                  return (
+                    <div key={parking.id}>
+                      <div className="collapse collapse-arrow bg-base-200 my-4">
+                        <input
+                          type="radio"
+                          name="my-accordion-1"
+                          defaultChecked
+                        />
+                        <div className="flex justify-between collapse-title text-xl font-medium">
+                          <div>{parking.name}</div>
+                          <div className="py-2 px-4 ">
+                            {parking.distance.toFixed(2)}km
+                          </div>
                         </div>
-                      </div>
-                      <div className="collapse-content">
-                        <p>hello</p>
-                        <img src={parking.image} />
-                        <div>
-                          <button
-                            onClick={() => {
-                              setSelectedParking(parking.position);
-                              setShowRoute(true);
-                            }}
-                            className="bg-blue-500 text-white px-2 py-1 mt-2 rounded"
-                          >
-                            Show Route
-                          </button>
-                          {/* <button
-                            onClick={handleCancelBtn}
-                            className="bg-red-500 text-white px-2 py-1 mt-2 rounded"
-                          >
-                            Cancel Route
-                          </button> */}
+                        <div className="collapse-content">
+                          <div className="flex justify-center">
+                            <p className="text-4xl text-green-700">
+                              Rs.
+                              <span className="font-bold">{parking.price}</span>
+                              <span className="text-black text-2xl">/hr</span>
+                            </p>
+                          </div>
+                          <div className="flex">
+                            <FaCar />
+                            {parking.spots} spots
+                          </div>
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => {
+                                setSelectedParking(parking.position);
+                                setShowRoute(true);
+                              }}
+                              className="w-64 bg-blue-500 hover:bg-blue-700 cursor-pointer text-white p-2 mt-2 rounded"
+                            >
+                              Get Directions
+                            </button>
+                          </div>
+                          <div className="flex my-2 justify-items-start ">
+                            <FaMapMarkerAlt />
+                            <span className="mx-2">{parking.location}</span>
+                          </div>
+                          <div className="flex">
+                            <FaPhoneAlt height="200px" />
+                            <span className="mx-2">{parking.phone_no}</span>
+                          </div>
+                          <img
+                            width="100px"
+                            height="200px"
+                            src={parking.image}
+                          />
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               : parkingSpace
                   .slice()
                   .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
@@ -381,11 +495,11 @@ const Map = () => {
                         />
                         <div className="flex justify-between collapse-title text-xl font-medium">
                           <div>{parking.name}</div>
-                          <div className="py-2 px-4 border-b">
+                          <div className="py-2 px-4 ">
                             Rs {parseFloat(parking.price).toFixed(2)}/hr
                           </div>
                         </div>
-                        <div className="collapse-content">
+                        {/* <div className="collapse-content">
                           <p>Price based listing</p>
                           <div>
                             <button
@@ -404,6 +518,42 @@ const Map = () => {
                               Cancel Route
                             </button>
                           </div>
+                        </div> */}
+                        <div className="collapse-content">
+                          <div className="flex justify-center">
+                            <p className="text-4xl text-info">
+                              <span className="font-bold">
+                                {parking.distance}
+                              </span>
+                              <span className="text-black text-2xl">/km</span>
+                            </p>
+                          </div>
+                          <div className="flex">
+                            <FaCar />
+                            {parking.spots} spots
+                          </div>
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => {
+                                setSelectedParking(parking.position);
+                                setShowRoute(true);
+                              }}
+                              className="w-64 bg-blue-500 hover:bg-blue-700 cursor-pointer text-white p-2 mt-2 rounded"
+                            >
+                              Get Directions
+                            </button>
+                          </div>
+                          <img
+                            width="100px"
+                            height="200px"
+                            src={parking.image}
+                          />
+                          <div className="flex">
+                            <FaMapMarkerAlt />
+                            {parking.location}
+                          </div>
+                          <FaPhone />
+                          {parking.phone_no}
                         </div>
                       </div>
                     </div>
