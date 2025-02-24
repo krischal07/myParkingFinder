@@ -13,12 +13,20 @@ const routes = [
 
   {
     path: "/admin",
-    element: <Admin />,
+    element: (
+      <AdminProtectedRoute>
+        <Admin />
+      </AdminProtectedRoute>
+    ),
   },
 
   {
     path: "/addspot",
-    element: <Addspot />,
+    element: (
+      <AdminProtectedRoute>
+        <Addspot />
+      </AdminProtectedRoute>
+    ),
     // element: <Addspot />,
   },
   { path: "*", element: <div>Not found</div> },

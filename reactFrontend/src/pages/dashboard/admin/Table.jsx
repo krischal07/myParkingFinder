@@ -42,11 +42,7 @@ const Table = ({ parkingSpots, setParkingSpots }) => {
                 <td>{spot.price}</td>
                 <td>{spot.spots}</td>
                 <td>
-                  <button className="btn btn-primary mx-1">
-                    <FaEdit />
-                  </button>
-
-                  <dvi>
+                  <div>
                     <button
                       className="btn btn-error"
                       onClick={() => {
@@ -84,7 +80,7 @@ const Table = ({ parkingSpots, setParkingSpots }) => {
                         </div>
                       </div>
                     </dialog>
-                  </dvi>
+                  </div>
 
                   {/* <button
                     onClick={() => handleDeleteParkingSpot(spot.id)}
