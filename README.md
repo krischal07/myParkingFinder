@@ -62,7 +62,7 @@ Below are some screenshots of MyParkingFinder in action. (Add your screenshots h
 ![Parking Search](screenshots/dashboard.png)
 
 ### User Page
-![Parking Search](screenshots/user.png)
+![Parking Search](screenshots/user1.png)
 
 ### Add Spot
 ![User Dashboard](screenshots/addspot.png)

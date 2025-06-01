@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch";
@@ -189,133 +187,62 @@ const Map = () => {
   const [showRoute, setShowRoute] = useState(false);
   const [locationError, setLocationError] = useState(null);
   const [parkingSpaces, setParkingSpaces] = useState([]);
-  
   const [sortBy, setSortBy] = useState("distance");
   const provider = new OpenStreetMapProvider();
   const polylineRef = useRef(null);
 
-  // let parkingSpaces = [ {
-  //   "name": "Downtown Parking Lot",
-  //   "location": "123 Main St, City Center",
-  //   "price": 5.00,
-  //   "spots": 50,
-  //   "latitude": 40.712776,
-  //   "longitude": -74.005974,
-  //   "phone_no": "123-456-7890",
-  //   "position": {
-  //     "latitude": 40.712776,
-  //     "longitude": -74.005974
-  //   }
-  // },
-  // {
-  //   "name": "Sunset Garage",
-  //   "location": "456 Sunset Blvd, Westside",
-  //   "price": 8.50,
-  //   "spots": 30,
-  //   "latitude": 34.052235,
-  //   "longitude": -118.243683,
-  //   "phone_no": "987-654-3210",
-  //   "position": {
-  //     "latitude": 34.052235,
-  //     "longitude": -118.243683
-  //   }
-  // },
-  // {
-  //   "name": "Airport Parking",
-  //   "location": "789 Airport Rd, Near Terminal 1",
-  //   "price": 12.00,
-  //   "spots": 100,
-  //   "latitude": 37.621312,
-  //   "longitude": -122.378955,
-  //   "phone_no": "555-123-4567",
-  //   "position": {
-  //     "latitude": 37.621312,
-  //     "longitude": -122.378955
-  //   }
-  // },
-  // {
-  //   "name": "Green Park Parking",
-  //   "location": "101 Greenway, Parkside",
-  //   "price": 4.75,
-  //   "spots": 20,
-  //   "latitude": 51.507351,
-  //   "longitude": -0.127758,
-  //   "phone_no": "444-888-9999",
-  //   "position": {
-  //     "latitude": 51.507351,
-  //     "longitude": -0.127758
-  //   }
-  // },
-  // {
-  //   "name": "Mall Parking",
-  //   "location": "500 Mall Avenue, Shopping District",
-  //   "price": 7.25,
-  //   "spots": 200,
-  //   "latitude": 35.689487,
-  //   "longitude": 139.691711,
-  //   "phone_no": "333-222-1111",
-  //   "position": {
-  //     "latitude": 35.689487,
-  //     "longitude": 139.691711
-  //   }
-  // }]
-  
-  // useEffect(() => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const { latitude, longitude } = position.coords;
-  //         const userLocation = L.latLng(latitude, longitude);
-  //         if (NEPAL_BOUNDS.contains(userLocation)) {
-  //           setUserPosition([latitude, longitude]);
-  //         }
-  //       },
-  //       (error) => {
-  //         console.error("Geolocation error:", error);
-  //         setLocationError("Unable to retrieve your location.");
-  //       }
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      console.log("Geolocation is available");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("Successfully got position:", { latitude, longitude });
+          setUserPosition([latitude, longitude]);
+        },
+        (error) => {
+          console.error("Detailed geolocation error:", {
+            code: error.code,
+            message: error.message,
+            PERMISSION_DENIED: error.PERMISSION_DENIED,
+            POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
+            TIMEOUT: error.TIMEOUT
+          });
+          
+          let errorMessage = "Unable to retrieve your location. ";
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage += "Please enable location access in your browser settings.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage += "Your location could not be determined. Please check your device's location services.";
+              break;
+            case error.TIMEOUT:
+              errorMessage += "Location request timed out. Please try again.";
+              break;
+            default:
+              errorMessage += "An unknown error occurred.";
+          }
+          setLocationError(errorMessage);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser");
+      setLocationError("Geolocation is not supported by your browser.");
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   fetch("http://127.0.0.1:8000/api/parking_spots")
-  //     .then((res) => res.json())
-  //     .then((data) => setParkingSpaces(data))
-  //     .catch((error) => console.error("Error fetching parking spots:", error));
-  // }, []);
-
-  // useEffect(() => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const { latitude, longitude } = position.coords;
-  //         console.log("User location:", latitude, longitude);
-  //         setUserPosition([latitude, longitude]);
-  //       },
-  //       (error) => {
-  //         console.error("Geolocation error:", error);
-  //         switch (error.code) {
-  //           case error.PERMISSION_DENIED:
-  //             setLocationError("Location access denied. Please enable location services.");
-  //             break;
-  //           case error.POSITION_UNAVAILABLE:
-  //             setLocationError("Location information is unavailable.");
-  //             break;
-  //           case error.TIMEOUT:
-  //             setLocationError("Location request timed out. Try again.");
-  //             break;
-  //           default:
-  //             setLocationError("An unknown error occurred.");
-  //         }
-  //       },
-  //       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-  //     );
-  //   } else {
-  //     // setLocationError("Geolocation is not supported by your browser.");
-  //   }
-  // }, []);
-  
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/parking_spots")
+      .then((res) => res.json())
+      .then((data) => setParkingSpaces(data))
+      .catch((error) => console.error("Error fetching parking spots:", error));
+  }, []);
 
   const handleDirectionsClick = (parking) => {
     setSelectedParking(parking.position);
